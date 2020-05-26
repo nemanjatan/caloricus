@@ -109,6 +109,10 @@
       <path value="$PROJECT_DIR$/vendor/spatie/once" />
       <path value="$PROJECT_DIR$/vendor/cakephp/chronos" />
       <path value="$PROJECT_DIR$/vendor/gregoriohc/laravel-nova-theme-responsive" />
+      <path value="$PROJECT_DIR$/vendor/caloricus/article-slug" />
+      <path value="$PROJECT_DIR$/vendor/benjaminhirsch/nova-slug-field" />
+      <path value="$PROJECT_DIR$/vendor/froala/nova-froala-field" />
+      <path value="$PROJECT_DIR$/vendor/spatie/image-optimizer" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />
