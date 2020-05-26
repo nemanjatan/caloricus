@@ -4,13 +4,10 @@ namespace App\Nova;
 
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
-use Froala\NovaFroalaField\Froala;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Article extends Resource
 {
@@ -54,8 +51,7 @@ class Article extends Resource
             Slug::make('Slug')
                 ->showUrlPreview('https://caloricus.com/articles'),
 
-            // Trix::make('Body'),
-            Froala::make('Body')->withFiles('public'),
+            Trix::make('Body'),
 
             Boolean::make('Is Published'),
         ];
