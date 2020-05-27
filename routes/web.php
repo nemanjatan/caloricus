@@ -20,3 +20,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+// TODO: Delete this after the demo.
+Route::get('/protected', function () {
+    return 'secret';
+})->middleware('can:create_article');
