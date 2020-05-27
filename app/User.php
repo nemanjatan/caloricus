@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'roles',
     ];
 
     /**
@@ -53,6 +53,6 @@ class User extends Authenticatable
 
     public function permissions()
     {
-        return $this->roles->map->permissions->flatten()->pluck('name')->unique();
+        return $this->roles->map->permissions->flatten()->pluck('label')->unique();
     }
 }

@@ -21,6 +21,18 @@ class RolesTableSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ),
             array(
+                'name' => 'Personal Trainer',
+                'label' => 'personal_trainer',
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ),
+            array(
+                'name' => 'Dietitian',
+                'label' => 'dietitian',
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ),
+            array(
                 'name' => 'Administrator',
                 'label' => 'administrator',
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),

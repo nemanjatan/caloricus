@@ -83,6 +83,9 @@
                 @can ('create_article')
                     <a href="#">Create Article</a>
                 @endcan
+                @can ('can_access_panel')
+                    <a href="/panel">Editor Dashboard</a>
+                @endcan
             </div>
         </div>
     </body>
