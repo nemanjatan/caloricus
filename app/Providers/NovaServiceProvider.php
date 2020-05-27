@@ -42,9 +42,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function gate()
     {
         Gate::define('viewNova', function ($user) {
-            // TODO : Remove hardcoded string for permission.
-            return in_array($user->permissions(), [
-                'can_access_panel'
+            return in_array($user->email, [
+                'nemanjatanaskovic.eng@gmail.com'
             ]);
         });
     }
