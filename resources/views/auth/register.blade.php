@@ -61,6 +61,18 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label for="roles" class="col-md-4 col-form-label text-md-right">{{ __('Roles') }}</label>
+
+                            <div class="col-md-6">
+                                <input type="checkbox" name="roles[]" value="Personal Trainer" id="personal-trainer" />
+                                <label for="personal-trainer">{{ __('Personal Trainer') }}</label>
+
+                                <input type="checkbox" name="roles[]" value="Dietitian" id="dietitian" />
+                                <label for="dietitian">{{ __('Dietitian') }}</label>
+                            </div>
+                        </div>
+
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
