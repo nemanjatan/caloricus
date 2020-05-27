@@ -60,7 +60,7 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return \App\User
+     * @return User
      */
     protected function create(array $data)
     {
@@ -69,6 +69,12 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
+        if (isset($data['roles'])) {
+            foreach ($data['roles'] as $role) {
+                $user->assignRole($role);
+            }
+        }
 
         $user->assignRole('Regular User');
 
