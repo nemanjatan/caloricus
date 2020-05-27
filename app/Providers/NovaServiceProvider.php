@@ -43,6 +43,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     {
         Gate::define('viewNova', function ($user) {
             // TODO : Remove hardcoded string for permission.
+            dd($user->permissions());
             return $user->permissions()->contains('can_access_panel');
         });
     }
