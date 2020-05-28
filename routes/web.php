@@ -20,6 +20,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/articles/{article}', 'ArticleController@show')->name('articles.show');
 
 // TODO: Delete this after the demo.
 Route::get('/protected', function () {
