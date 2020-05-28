@@ -25,7 +25,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::before(function ($user, $permission) {
+        Gate::after(function ($user, $permission) {
             return $user->permissions()->contains($permission);
         });
     }
