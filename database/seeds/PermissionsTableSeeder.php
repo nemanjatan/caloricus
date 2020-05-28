@@ -20,6 +20,18 @@ class PermissionsTableSeeder extends Seeder
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ),
+            array(
+                'name' => 'Can Administrate',
+                'label' => 'can_administrate',
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ),
+            array(
+                'name' => 'Can Create Article',
+                'label' => 'can_create_article',
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ),
         );
 
         Permission::insert($data);
