@@ -55,7 +55,7 @@ class Article extends Resource
 
             Trix::make('Body'),
 
-            Image::make('Featured Image')->disableDownload(),
+            Image::make('Featured Image')->disableDownload()->disk('public'),
 
             Boolean::make('Is Published'),
 
