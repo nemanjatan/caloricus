@@ -5,8 +5,10 @@ namespace App\Nova;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Trix;
 
 class Article extends Resource
@@ -53,7 +55,11 @@ class Article extends Resource
 
             Trix::make('Body'),
 
+            Image::make('Featured Image')->disableDownload(),
+
             Boolean::make('Is Published'),
+
+            belongsTo::make('User'),
         ];
     }
 

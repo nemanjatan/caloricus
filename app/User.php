@@ -55,4 +55,9 @@ class User extends Authenticatable
     {
         return $this->roles->map->permissions->flatten()->pluck('label')->unique();
     }
+
+    public function articles()
+    {
+        return $this->hasMany(Article::class);
+    }
 }
