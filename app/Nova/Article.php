@@ -47,13 +47,23 @@ class Article extends Resource
         return [
             ID::make()->sortable(),
 
-            TextWithSlug::make('Title')
-                ->slug('slug'),
+            TextWithSlug::make('Title')->rules([
+                'required',
+                'max:80',
+            ])->slug('slug'),
 
             Slug::make('Slug')
-                ->showUrlPreview('https://caloricus.com/articles'),
+                ->showUrlPreview('https://caloricus.com/articles')
+                ->rules([
+                    'required',
+                    'max:80',
+                    'unique:articles,slug',
+                    'alpha_dash'
+                ])->onlyOnForms(),
 
-            Trix::make('Body'),
+            Trix::make('Body')->rules([
+                'required'
+            ]),
 
             Image::make('Featured Image')->disableDownload()->disk('public'),
 
