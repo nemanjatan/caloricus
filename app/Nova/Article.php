@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
+use Ctessier\NovaAdvancedImageField\AdvancedImage;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
@@ -65,7 +66,14 @@ class Article extends Resource
                 'required'
             ]),
 
-            Image::make('Featured Image')->disableDownload()->disk('public'),
+            AdvancedImage::make('Featured Image')
+                ->croppable()
+                ->croppable(16/9)
+                ->disableDownload()
+                ->rules([
+                    'max:2000'
+                ])
+                ->disk('public'),
 
             Boolean::make('Is Published'),
 
