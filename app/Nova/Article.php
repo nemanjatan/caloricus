@@ -5,12 +5,13 @@ namespace App\Nova;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Ctessier\NovaAdvancedImageField\AdvancedImage;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Trix;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Article extends Resource
 {
@@ -38,9 +39,25 @@ class Article extends Resource
     ];
 
     /**
+     * Build an "index" query for the given resource.
+     *
+     * @param NovaRequest $request
+     * @param  Builder  $query
+     * @return Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if ($request->user()->permissions()->contains('can_administrate')) {
+            return $query;
+        } else {
+            return $query->where('user_id', $request->user()->id);
+        }
+    }
+
+    /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function fields(Request $request)
@@ -55,7 +72,7 @@ class Article extends Resource
 
             Slug::make('Slug')
                 ->showUrlPreview('https://caloricus.com/articles')
-                ->rules([
+                ->creationRules([
                     'required',
                     'max:80',
                     'unique:articles,slug',
@@ -75,16 +92,22 @@ class Article extends Resource
                 ])
                 ->disk('public'),
 
-            Boolean::make('Is Published'),
+            Boolean::make('Is Published')
+                ->hideWhenCreating(function ($request) {
+                    return !$request->user()->permissions()->contains('can_administrate');
+                })
+                ->hideWhenUpdating(function ($request) {
+                    return !$request->user()->permissions()->contains('can_administrate');
+                }),
 
-            belongsTo::make('User'),
+            BelongsTo::make('User'),
         ];
     }
 
     /**
      * Get the cards available for the request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function cards(Request $request)
@@ -95,7 +118,7 @@ class Article extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function filters(Request $request)
@@ -106,7 +129,7 @@ class Article extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function lenses(Request $request)
@@ -117,7 +140,7 @@ class Article extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function actions(Request $request)
