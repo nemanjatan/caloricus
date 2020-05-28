@@ -5,11 +5,11 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-body" style="max-width:800px">
+                    <div class="card-body">
                         {{ $article->title }}
 
                         @if ( $article->featured_image )
-                            <img src="{{ $imagePath }}" width="700">
+                            <img src="{{ $imagePath }}" width="400">
                         @endif
                     </div>
                 </div>
