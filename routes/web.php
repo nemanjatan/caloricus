@@ -26,3 +26,7 @@ Route::get('/articles/{article}', 'ArticleController@show')->name('articles.show
 Route::get('/protected', function () {
     return 'secret';
 })->middleware('can:create_article');
+
+Route::get('/chats', function () {
+    return view('chats.index');
+})->name('chats.index');
