@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Resources\UserResource;
+use App\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,3 +32,9 @@ Route::get('/protected', function () {
 Route::get('/chats', function () {
     return view('chats.index');
 })->name('chats.index');
+
+Route::post('/getChats', function () {
+    return UserResource::collection(User::where('id', '!=', auth()->id())->get());
+});
+
+Route::post('/session/create', 'SessionController@create');
