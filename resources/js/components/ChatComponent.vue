@@ -13,6 +13,7 @@
                                 v-for="chat in chats">
                                     <a href="">
                                         {{ chat.name }}
+                                        <span class="text-danger" v-if="chat.session && chat.session.unreadCount > 0">{{ chat.session.unreadCount }}</span>
                                     </a>
                                     <p>Status: <span v-if="chat.online">Online</span> </p>
                             </li>
@@ -48,7 +49,10 @@
 
             getChats() {
                 axios.post('/getChats').then(res => {
-                    this.chats = res.data.data
+                    this.chats = res.data.data;
+                    this.chats.forEach(chat => {
+                        chat.session ? this.listenForEverySession(chat) : ''
+                    })
                 });
             },
 
@@ -58,6 +62,7 @@
                         chat.session ? chat.session.open = false : '';
                     });
                     chat.session.open = true;
+                    chat.session.unreadCount = 0;
                 } else {
                     this.chats.forEach(chat => {
                         if (chat.session) {
@@ -75,6 +80,11 @@
                         chat.session = res.data.data;
                         chat.session.open = true;
                     });
+            },
+
+            listenForEverySession(chat) {
+                Echo.private(`Chat.${chat.session.id}`)
+                    .listen('PrivateChatEvent', () => (chat.session.open ? '' : chat.session.unreadCount++));
             }
         },
 
@@ -84,6 +94,7 @@
             Echo.channel('Chat').listen('SessionEvent', e => {
                 let chat = this.chats.find(chat => chat.id == e.sessionBy);
                 chat.session = e.session;
+                this.listenForEverySession(chat);
             });
 
             Echo.join('Chat')

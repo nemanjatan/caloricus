@@ -66,14 +66,21 @@
                     .then(res => {
                         this.chats = res.data.data
                     });
+            },
+
+            read() {
+                axios.post(`/session/${this.chat.session.id}/read`);
             }
         },
 
         created() {
+            this.read();
+
             this.getAllMessages();
 
             Echo.private(`Chat.${this.chat.session.id}`)
                 .listen('PrivateChatEvent', e => {
+                    this.chat.session.open ? this.read() : '';
                     this.chats.push({
                         message: e.content,
                         type: 1,

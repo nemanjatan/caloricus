@@ -1943,6 +1943,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -1959,6 +1960,10 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.post('/getChats').then(function (res) {
         _this.chats = res.data.data;
+
+        _this.chats.forEach(function (chat) {
+          chat.session ? _this.listenForEverySession(chat) : '';
+        });
       });
     },
     openChat: function openChat(chat) {
@@ -1967,6 +1972,7 @@ __webpack_require__.r(__webpack_exports__);
           chat.session ? chat.session.open = false : '';
         });
         chat.session.open = true;
+        chat.session.unreadCount = 0;
       } else {
         this.chats.forEach(function (chat) {
           if (chat.session) {
@@ -1983,6 +1989,11 @@ __webpack_require__.r(__webpack_exports__);
         chat.session = res.data.data;
         chat.session.open = true;
       });
+    },
+    listenForEverySession: function listenForEverySession(chat) {
+      Echo["private"]("Chat.".concat(chat.session.id)).listen('PrivateChatEvent', function () {
+        return chat.session.open ? '' : chat.session.unreadCount++;
+      });
     }
   },
   created: function created() {
@@ -1995,6 +2006,8 @@ __webpack_require__.r(__webpack_exports__);
       });
 
       chat.session = e.session;
+
+      _this2.listenForEverySession(chat);
     });
     Echo.join('Chat').here(function (users) {
       _this2.chats.forEach(function (chat) {
@@ -2090,13 +2103,19 @@ __webpack_require__.r(__webpack_exports__);
       axios.post("/session/".concat(this.chat.session.id, "/chats")).then(function (res) {
         _this.chats = res.data.data;
       });
+    },
+    read: function read() {
+      axios.post("/session/".concat(this.chat.session.id, "/read"));
     }
   },
   created: function created() {
     var _this2 = this;
 
+    this.read();
     this.getAllMessages();
     Echo["private"]("Chat.".concat(this.chat.session.id)).listen('PrivateChatEvent', function (e) {
+      _this2.chat.session.open ? _this2.read() : '';
+
       _this2.chats.push({
         message: e.content,
         type: 1,
@@ -44442,8 +44461,13 @@ var render = function() {
                       _vm._v(
                         "\n                                    " +
                           _vm._s(chat.name) +
-                          "\n                                "
-                      )
+                          "\n                                    "
+                      ),
+                      chat.session && chat.session.unreadCount > 0
+                        ? _c("span", { staticClass: "text-danger" }, [
+                            _vm._v(_vm._s(chat.session.unreadCount))
+                          ])
+                        : _vm._e()
                     ]),
                     _vm._v(" "),
                     _c("p", [
