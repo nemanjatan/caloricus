@@ -49,6 +49,9 @@
                                 </li>
                             @endif
                         @else
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('chats.index') }}">{{ __('Messages') }}</a>
+                            </li>
                             @can ('can_access_panel')
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ \Laravel\Nova\Nova::path() }}">{{ __('Dashboard') }}</a>

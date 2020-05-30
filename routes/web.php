@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Resources\UserResource;
+use App\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,3 +28,16 @@ Route::get('/articles/{article}', 'ArticleController@show')->name('articles.show
 Route::get('/protected', function () {
     return 'secret';
 })->middleware('can:create_article');
+
+Route::get('/chats', function () {
+    return view('chats.index');
+})->name('chats.index');
+Route::post('/getChats', function () {
+    return UserResource::collection(User::where('id', '!=', auth()->id())->get());
+});
+Route::post('/session/create', 'SessionController@create');
+
+// Sending the message.
+Route::post('/send/{session}', 'ChatController@send');
+Route::post('/session/{session}/chats', 'ChatController@chats');
+Route::post('/session/{session}/read', 'ChatController@read');
