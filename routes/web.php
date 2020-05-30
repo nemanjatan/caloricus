@@ -32,9 +32,10 @@ Route::get('/protected', function () {
 Route::get('/chats', function () {
     return view('chats.index');
 })->name('chats.index');
-
 Route::post('/getChats', function () {
     return UserResource::collection(User::where('id', '!=', auth()->id())->get());
 });
-
 Route::post('/session/create', 'SessionController@create');
+
+// Sending the message.
+Route::post('/send/{session}', 'ChatController@send');

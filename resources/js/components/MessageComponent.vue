@@ -15,7 +15,7 @@
 
         <form class="card-footer" @submit.prevent="send">
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Your message here..." />
+                <input type="text" class="form-control" placeholder="Your message here..." v-model="message" />
             </div>
         </form>
     </div>
@@ -27,13 +27,27 @@
         data() {
             return {
                 chats: [],
-                open: true
+                open: true,
+                message: null
             }
         },
 
         methods: {
             send() {
-                console.log('acab');
+                if (this.message) {
+                    this.pushToChat(this.message);
+
+                    axios.post(`/send/${this.chat.session.id}`, {
+                        body: this.message,
+                        toUser: this.chat.id
+                    });
+
+                    this.message = null;
+                }
+            },
+
+            pushToChat(message) {
+                this.chats.push({ message: message });
             },
 
             close() {

@@ -1939,6 +1939,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -1954,16 +1958,23 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.post('/getChats').then(function (res) {
-        return _this.chats = res.data.data;
+        _this.chats = res.data.data;
       });
     },
     openChat: function openChat(chat) {
       if (chat.session) {
         this.chats.forEach(function (chat) {
-          chat.session.open = false;
+          if (chat.session) {
+            chat.session.open = false;
+          }
         });
         chat.session.open = true;
       } else {
+        this.chats.forEach(function (chat) {
+          if (chat.session) {
+            chat.session.open = false;
+          }
+        });
         this.createSession(chat);
       }
     },
@@ -1971,13 +1982,38 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/session/create', {
         chat_id: chat.id
       }).then(function (res) {
-        chat.session = res.data.data;
-        chat.session.open = true;
+        chat.session = res.data.data, chat.session.open = true;
       });
     }
   },
   created: function created() {
+    var _this2 = this;
+
     this.getChats();
+    Echo.channel('Chat').listen('SessionEvent', function (e) {
+      var chat = _this2.chats.find(function (chat) {
+        return chat.id == e.sessionBy;
+      });
+
+      chat.session = e.session;
+    });
+    Echo.join('Chat').here(function (users) {
+      _this2.chats.forEach(function (chat) {
+        users.forEach(function (user) {
+          if (user.id == chat.id) {
+            chat.online = true;
+          }
+        });
+      });
+    }).joining(function (user) {
+      _this2.chats.forEach(function (chat) {
+        return user.id == chat.id ? chat.online = true : '';
+      });
+    }).leaving(function (user) {
+      _this2.chats.forEach(function (chat) {
+        return user.id == chat.id ? chat.online = false : '';
+      });
+    });
   },
   components: {
     MessageComponent: _MessageComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
@@ -2023,12 +2059,25 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       chats: [],
-      open: true
+      open: true,
+      message: null
     };
   },
   methods: {
     send: function send() {
-      console.log('acab');
+      if (this.message) {
+        this.pushToChat(this.message);
+        axios.post("/send/".concat(this.chat.session.id), {
+          body: this.message,
+          toUser: this.chat.id
+        });
+        this.message = null;
+      }
+    },
+    pushToChat: function pushToChat(message) {
+      this.chats.push({
+        message: message
+      });
     },
     close: function close() {
       this.$emit('close');
@@ -44365,10 +44414,10 @@ var render = function() {
               { staticClass: "list-group" },
               _vm._l(_vm.chats, function(chat) {
                 return _c(
-                  "a",
+                  "li",
                   {
                     key: chat.id,
-                    attrs: { href: "" },
+                    staticClass: "list-group-item",
                     on: {
                       click: function($event) {
                         $event.preventDefault()
@@ -44377,12 +44426,17 @@ var render = function() {
                     }
                   },
                   [
-                    _c("li", { staticClass: "list-group-item" }, [
+                    _c("a", { attrs: { href: "" } }, [
                       _vm._v(
-                        "\n                                " +
+                        "\n                                    " +
                           _vm._s(chat.name) +
-                          "\n                            "
+                          "\n                                "
                       )
+                    ]),
+                    _vm._v(" "),
+                    _c("p", [
+                      _vm._v("Status: "),
+                      chat.online ? _c("span", [_vm._v("Online")]) : _vm._e()
                     ])
                   ]
                 )
@@ -44487,23 +44541,35 @@ var render = function() {
           }
         }
       },
-      [_vm._m(0)]
+      [
+        _c("div", { staticClass: "form-group" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.message,
+                expression: "message"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { type: "text", placeholder: "Your message here..." },
+            domProps: { value: _vm.message },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.message = $event.target.value
+              }
+            }
+          })
+        ])
+      ]
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("input", {
-        staticClass: "form-control",
-        attrs: { type: "text", placeholder: "Your message here..." }
-      })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
