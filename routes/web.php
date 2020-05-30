@@ -39,3 +39,4 @@ Route::post('/session/create', 'SessionController@create');
 
 // Sending the message.
 Route::post('/send/{session}', 'ChatController@send');
+Route::post('/session/{session}/chats', 'ChatController@chats');

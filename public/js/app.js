@@ -1964,9 +1964,7 @@ __webpack_require__.r(__webpack_exports__);
     openChat: function openChat(chat) {
       if (chat.session) {
         this.chats.forEach(function (chat) {
-          if (chat.session) {
-            chat.session.open = false;
-          }
+          chat.session ? chat.session.open = false : '';
         });
         chat.session.open = true;
       } else {
@@ -1982,7 +1980,8 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/session/create', {
         chat_id: chat.id
       }).then(function (res) {
-        chat.session = res.data.data, chat.session.open = true;
+        chat.session = res.data.data;
+        chat.session.open = true;
       });
     }
   },
@@ -2000,9 +1999,7 @@ __webpack_require__.r(__webpack_exports__);
     Echo.join('Chat').here(function (users) {
       _this2.chats.forEach(function (chat) {
         users.forEach(function (user) {
-          if (user.id == chat.id) {
-            chat.online = true;
-          }
+          user.id == chat.id ? chat.online = true : '';
         });
       });
     }).joining(function (user) {
@@ -2054,6 +2051,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['chat'],
   data: function data() {
@@ -2076,20 +2076,32 @@ __webpack_require__.r(__webpack_exports__);
     },
     pushToChat: function pushToChat(message) {
       this.chats.push({
-        message: message
+        message: message,
+        type: 0,
+        sent_at: 'Just now'
       });
     },
     close: function close() {
       this.$emit('close');
+    },
+    getAllMessages: function getAllMessages() {
+      var _this = this;
+
+      axios.post("/session/".concat(this.chat.session.id, "/chats")).then(function (res) {
+        _this.chats = res.data.data;
+      });
     }
   },
   created: function created() {
-    this.chats.push({
-      message: 'Test 1'
-    }, {
-      message: 'Test 2'
-    }, {
-      message: 'Test 3'
+    var _this2 = this;
+
+    this.getAllMessages();
+    Echo["private"]("Chat.".concat(this.chat.session.id)).listen('PrivateChatEvent', function (e) {
+      _this2.chats.push({
+        message: e.content,
+        type: 1,
+        sent_at: 'Just Now'
+      });
     });
   }
 });
@@ -44523,9 +44535,15 @@ var render = function() {
         staticClass: "card-body"
       },
       _vm._l(_vm.chats, function(chat) {
-        return _c("p", { key: chat.message, staticClass: "card-text" }, [
-          _vm._v("\n            " + _vm._s(chat.message) + "\n        ")
-        ])
+        return _c(
+          "p",
+          {
+            key: chat.id,
+            staticClass: "card-text",
+            class: { "text-right": chat.type == 0 }
+          },
+          [_vm._v("\n                " + _vm._s(chat.message) + "\n        ")]
+        )
       }),
       0
     ),

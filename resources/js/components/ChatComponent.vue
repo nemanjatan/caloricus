@@ -55,9 +55,7 @@
             openChat(chat) {
                 if (chat.session) {
                     this.chats.forEach(chat => {
-                        if (chat.session) {
-                            chat.session.open = false;
-                        }
+                        chat.session ? chat.session.open = false : '';
                     });
                     chat.session.open = true;
                 } else {
@@ -74,7 +72,8 @@
                 axios
                     .post('/session/create', { chat_id: chat.id })
                     .then(res => {
-                        (chat.session = res.data.data), (chat.session.open = true);
+                        chat.session = res.data.data;
+                        chat.session.open = true;
                     });
             }
         },
@@ -91,9 +90,7 @@
             .here((users) => {
                 this.chats.forEach(chat => {
                     users.forEach(user => {
-                        if (user.id == chat.id) {
-                            chat.online = true
-                        }
+                        user.id == chat.id ? chat.online = true : '';
                     })
                 })
             })
