@@ -5,7 +5,6 @@
         </div>
 
         <div class="card-body" v-chat-scroll>
-<!--            :class="{'text-right' : chat.type == 0}"-->
             <p class="card-text"
                :class="{'text-right' : chat.type == 0}"
                v-for="chat in chats"
@@ -49,7 +48,6 @@
 
         methods: {
             send() {
-                console.log(this.session.id);
                 if (this.message) {
                     this.pushToChat(this.message);
 
@@ -73,7 +71,6 @@
             getAllMessages() {
                 axios.post(`/session/${this.session.id}/chats`)
                     .then(res => {
-                        console.log(res.data.data);
                         this.chats = res.data.data
                     });
             },
@@ -90,12 +87,12 @@
 
             Echo.private(`Chat.${this.session.id}`)
                 .listen('PrivateChatEvent', e => {
-                    // this.chat.session.open ? this.read() : '';
+                    this.read();
                     this.chats.push({
                         message: e.content,
                         type: 1,
                         sent_at: 'Just Now'
-                    });
+                    })
             });
         },
     }

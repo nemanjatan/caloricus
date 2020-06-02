@@ -46,7 +46,13 @@ class ChatController extends Controller
 
     public function chats(Session $session)
     {
-        return ChatResource::collection($session->chats->where('user_id', auth()->id()));
+        return ChatResource::collection(
+            $session->chats
+                ->where('user_id', auth()->id())
+                ->sortByDesc('id')
+                ->take(50)
+                ->sortBy('id')
+        );
     }
 
     public function read(Session $session)
@@ -68,7 +74,7 @@ class ChatController extends Controller
      */
     public function get_all_chats()
     {
-        $usersFromSessions = Session::where('user1_id', '=', auth()->id())
+        return Session::where('user1_id', '=', auth()->id())
             ->orWhere('user2_id', '=', auth()->id())->get()
             ->map(function ($session) {
                 if ($session->user1_id == auth()->id()) {
@@ -77,7 +83,5 @@ class ChatController extends Controller
                     return User::find($session->user1_id);
                 }
             });
-
-        return $usersFromSessions;
     }
 }
