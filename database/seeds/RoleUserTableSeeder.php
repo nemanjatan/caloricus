@@ -76,5 +76,21 @@ class RoleUserTableSeeder extends Seeder
             'created_at'=> Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at'=> Carbon::now()->format('Y-m-d H:i:s'),
         ]);
+
+        // Mima Tanaskovic <=> Regular user
+        DB::table('role_user')->insert([
+            'user_id' => '4',
+            'role_id' => '1',
+            'created_at'=> Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at'=> Carbon::now()->format('Y-m-d H:i:s'),
+        ]);
+
+        // Sanja Tanaskovic <=> Regular user
+        DB::table('role_user')->insert([
+            'user_id' => '5',
+            'role_id' => '1',
+            'created_at'=> Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at'=> Carbon::now()->format('Y-m-d H:i:s'),
+        ]);
     }
 }
