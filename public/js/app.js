@@ -2056,10 +2056,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['chat'],
+  props: {
+    session: {
+      type: Object,
+      required: true
+    },
+    user: {
+      type: String,
+      required: true
+    },
+    id: {
+      type: Number,
+      required: true
+    }
+  },
   data: function data() {
     return {
       chats: [],
@@ -2069,11 +2080,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     send: function send() {
+      console.log(this.session.id);
+
       if (this.message) {
         this.pushToChat(this.message);
-        axios.post("/send/".concat(this.chat.session.id), {
+        axios.post("/message/send/".concat(this.session.id), {
           body: this.message,
-          toUser: this.chat.id
+          toUser: this.id
         });
         this.message = null;
       }
@@ -2085,18 +2098,16 @@ __webpack_require__.r(__webpack_exports__);
         sent_at: 'Just now'
       });
     },
-    close: function close() {
-      this.$emit('close');
-    },
     getAllMessages: function getAllMessages() {
       var _this = this;
 
-      axios.post("/session/".concat(this.chat.session.id, "/chats")).then(function (res) {
+      axios.post("/session/".concat(this.session.id, "/chats")).then(function (res) {
+        console.log(res.data.data);
         _this.chats = res.data.data;
       });
     },
     read: function read() {
-      axios.post("/session/".concat(this.chat.session.id, "/read"));
+      axios.post("/session/".concat(this.session.id, "/read"));
     }
   },
   created: function created() {
@@ -2104,9 +2115,8 @@ __webpack_require__.r(__webpack_exports__);
 
     this.read();
     this.getAllMessages();
-    Echo["private"]("Chat.".concat(this.chat.session.id)).listen('PrivateChatEvent', function (e) {
-      _this2.chat.session.open ? _this2.read() : '';
-
+    Echo["private"]("Chat.".concat(this.session.id)).listen('PrivateChatEvent', function (e) {
+      // this.chat.session.open ? this.read() : '';
       _this2.chats.push({
         message: e.content,
         type: 1,
@@ -44527,20 +44537,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card chat-box" }, [
     _c("div", { staticClass: "card-header" }, [
-      _vm._v("\n        " + _vm._s(_vm.chat.name) + "\n        "),
-      _c(
-        "a",
-        {
-          attrs: { href: "" },
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.close($event)
-            }
-          }
-        },
-        [_c("span", { attrs: { clas: "float-right" } }, [_vm._v("x")])]
-      )
+      _vm._v("\n            " + _vm._s(this.user) + "\n        ")
     ]),
     _vm._v(" "),
     _c(
@@ -44557,7 +44554,11 @@ var render = function() {
             staticClass: "card-text",
             class: { "text-right": chat.type == 0 }
           },
-          [_vm._v("\n                " + _vm._s(chat.message) + "\n        ")]
+          [
+            _vm._v(
+              "\n                " + _vm._s(chat.message) + "\n            "
+            )
+          ]
         )
       }),
       0
@@ -56803,6 +56804,7 @@ Vue.use(vue_chat_scroll__WEBPACK_IMPORTED_MODULE_0___default.a);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('chat-component', __webpack_require__(/*! ./components/ChatComponent.vue */ "./resources/js/components/ChatComponent.vue")["default"]);
+Vue.component('message-component', __webpack_require__(/*! ./components/MessageComponent.vue */ "./resources/js/components/MessageComponent.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

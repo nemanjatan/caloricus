@@ -1,18 +1,16 @@
 <template>
     <div class="card chat-box">
         <div class="card-header">
-            {{ chat.name }}
-            <a href="" @click.prevent="close">
-                <span clas="float-right">x</span>
-            </a>
+            {{ this.user }}
         </div>
 
         <div class="card-body" v-chat-scroll>
+<!--            :class="{'text-right' : chat.type == 0}"-->
             <p class="card-text"
-                :class="{'text-right' : chat.type == 0}"
-                v-for="chat in chats"
-                :key="chat.id">
-                    {{chat.message}}
+               :class="{'text-right' : chat.type == 0}"
+               v-for="chat in chats"
+               :key="chat.id">
+                {{chat.message}}
             </p>
         </div>
 
@@ -26,7 +24,21 @@
 
 <script>
     export default {
-        props: ['chat'],
+        props: {
+            session: {
+                type: Object,
+                required: true
+            },
+            user: {
+                type: String,
+                required: true
+            },
+            id: {
+                type: Number,
+                required: true
+            }
+        },
+
         data() {
             return {
                 chats: [],
@@ -37,12 +49,13 @@
 
         methods: {
             send() {
+                console.log(this.session.id);
                 if (this.message) {
                     this.pushToChat(this.message);
 
-                    axios.post(`/send/${this.chat.session.id}`, {
+                    axios.post(`/message/send/${this.session.id}`, {
                         body: this.message,
-                        toUser: this.chat.id
+                        toUser: this.id
                     });
 
                     this.message = null;
@@ -57,19 +70,16 @@
                 });
             },
 
-            close() {
-                this.$emit('close');
-            },
-
             getAllMessages() {
-                axios.post(`/session/${this.chat.session.id}/chats`)
+                axios.post(`/session/${this.session.id}/chats`)
                     .then(res => {
+                        console.log(res.data.data);
                         this.chats = res.data.data
                     });
             },
 
             read() {
-                axios.post(`/session/${this.chat.session.id}/read`);
+                axios.post(`/session/${this.session.id}/read`);
             }
         },
 
@@ -78,9 +88,9 @@
 
             this.getAllMessages();
 
-            Echo.private(`Chat.${this.chat.session.id}`)
+            Echo.private(`Chat.${this.session.id}`)
                 .listen('PrivateChatEvent', e => {
-                    this.chat.session.open ? this.read() : '';
+                    // this.chat.session.open ? this.read() : '';
                     this.chats.push({
                         message: e.content,
                         type: 1,

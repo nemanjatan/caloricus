@@ -30,14 +30,12 @@ Route::get('/protected', function () {
 })->middleware('can:create_article');
 
 // Chats
-Route::get('/chats', function () {
-    return view('chats.index');
-})->name('chats.index');
-
+Route::get('/chats', 'ChatController@index')->name('chats.index');
 Route::post('/chats/all', 'ChatController@get_all_chats')->name('chat.all');
+Route::get('/chat/{user}', 'ChatController@show')->name('chat.show');
 
 // Sending the message.
-Route::post('/send/{session}', 'ChatController@send');
+Route::post('/message/send/{session}', 'ChatController@send');
 Route::post('/session/{session}/chats', 'ChatController@chats');
 Route::post('/session/{session}/read', 'ChatController@read');
 Route::get('/session/create/{user}', 'SessionController@create')->name('session.create');

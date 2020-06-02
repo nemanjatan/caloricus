@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Events\PrivateChatEvent;
 use App\Http\Resources\ChatResource;
-use App\Http\Resources\UserResource;
 use App\Session;
 use App\User;
 use Carbon\Carbon;
@@ -12,6 +11,28 @@ use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
+    public function index()
+    {
+        $users = $this->get_all_chats();
+        return view('chats.index', ['users' => $users]);
+    }
+
+    public function show(User $user)
+    {
+        $session = Session::where('user2_id', '=', $user->id)->where('user1_id', '=', auth()->id())->first();
+
+        if (!$session) {
+            $session = Session::where('user1_id', '=', $user->id)->where('user2_id', '=', auth()->id())->first();
+        }
+
+        if ($session) {
+            $userName = User::where('id', '=', $user->id)->pluck('name')->first();
+            return view('chats.show', ['session' => $session, 'userName' => $userName, 'userId' => $user->id]);
+        }
+
+        return redirect(404);
+    }
+
     public function send(Session $session, Request $request)
     {
         $message = $session->messages()->create(['content' => $request->body]);
@@ -57,6 +78,6 @@ class ChatController extends Controller
                 }
             });
 
-        return UserResource::collection($usersFromSessions);
+        return $usersFromSessions;
     }
 }
