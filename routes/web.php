@@ -29,15 +29,19 @@ Route::get('/protected', function () {
     return 'secret';
 })->middleware('can:create_article');
 
+// Chats
 Route::get('/chats', function () {
     return view('chats.index');
 })->name('chats.index');
-Route::post('/getChats', function () {
-    return UserResource::collection(User::where('id', '!=', auth()->id())->get());
-});
-Route::post('/session/create', 'SessionController@create');
+
+Route::post('/chats/all', 'ChatController@get_all_chats')->name('chat.all');
 
 // Sending the message.
 Route::post('/send/{session}', 'ChatController@send');
 Route::post('/session/{session}/chats', 'ChatController@chats');
 Route::post('/session/{session}/read', 'ChatController@read');
+Route::get('/session/create/{user}', 'SessionController@create')->name('session.create');
+
+// Profiles
+Route::get('/profiles', 'ProfileController@index')->name('profile.index');
+Route::get('/profile/{profile}', 'ProfileController@show')->name('profile.show');

@@ -5,21 +5,28 @@ namespace App\Http\Controllers;
 use App\Events\SessionEvent;
 use App\Http\Resources\SessionResource;
 use App\Session;
-use Illuminate\Http\Request;
+use App\User;
 
 class SessionController extends Controller
 {
-    public function create(Request $request)
+    public function create(User $user)
     {
-        $session = Session::create([
-            'user1_id' => auth()->id(),
-            'user2_id' => $request->chat_id
-        ]);
+        $sessionExist = Session::where('user1_id', '=', $user->id)
+            ->where('user2_id', '=', auth()->id())->first();
 
-        $modifiedSession = new SessionResource($session);
+        if (!$sessionExist) {
+            $session = Session::firstOrCreate([
+                'user1_id' => auth()->id(),
+                'user2_id' => $user->id
+            ]);
 
-        broadcast(new SessionEvent($modifiedSession, auth()->id()));
+            $modifiedSession = new SessionResource($session);
 
-        return $modifiedSession;
+            broadcast(new SessionEvent($modifiedSession, auth()->id()));
+
+            return redirect(route('chats.index'));
+        }
+
+        return redirect(route('chats.index'));
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Profile;
 use App\Providers\RouteServiceProvider;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -77,6 +78,9 @@ class RegisterController extends Controller
         }
 
         $user->assignRole('Regular User');
+
+        $profile = new Profile();
+        $user->profile()->save($profile);
 
         return $user;
     }
