@@ -48,7 +48,7 @@
             },
 
             getChats() {
-                axios.post('/getChats').then(res => {
+                axios.post('/chats/all').then(res => {
                     this.chats = res.data.data;
                     this.chats.forEach(chat => {
                         chat.session ? this.listenForEverySession(chat) : ''
@@ -69,17 +69,7 @@
                             chat.session.open = false
                         }
                     });
-                    this.createSession(chat);
                 }
-            },
-
-            createSession(chat) {
-                axios
-                    .post('/session/create', { chat_id: chat.id })
-                    .then(res => {
-                        chat.session = res.data.data;
-                        chat.session.open = true;
-                    });
             },
 
             listenForEverySession(chat) {

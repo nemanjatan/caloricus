@@ -1958,7 +1958,7 @@ __webpack_require__.r(__webpack_exports__);
     getChats: function getChats() {
       var _this = this;
 
-      axios.post('/getChats').then(function (res) {
+      axios.post('/chats/all').then(function (res) {
         _this.chats = res.data.data;
 
         _this.chats.forEach(function (chat) {
@@ -1979,16 +1979,7 @@ __webpack_require__.r(__webpack_exports__);
             chat.session.open = false;
           }
         });
-        this.createSession(chat);
       }
-    },
-    createSession: function createSession(chat) {
-      axios.post('/session/create', {
-        chat_id: chat.id
-      }).then(function (res) {
-        chat.session = res.data.data;
-        chat.session.open = true;
-      });
     },
     listenForEverySession: function listenForEverySession(chat) {
       Echo["private"]("Chat.".concat(chat.session.id)).listen('PrivateChatEvent', function () {
@@ -56866,8 +56857,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
-  key: "482f06269df654d0074e",
-  cluster: "us2",
+  key: "9994185dffdd51fb04a6",
+  cluster: "eu",
   forceTLS: true
 });
 

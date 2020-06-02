@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Events\PrivateChatEvent;
 use App\Http\Resources\ChatResource;
+use App\Http\Resources\UserResource;
 use App\Session;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -36,5 +38,25 @@ class ChatController extends Controller
         foreach ($chats as $chat) {
             $chat->update(['read_at' => Carbon::now()]);
         }
+    }
+
+    /**
+     * Return all chats for currently logged in user.
+     *
+     * @return mixed
+     */
+    public function get_all_chats()
+    {
+        $usersFromSessions = Session::where('user1_id', '=', auth()->id())
+            ->orWhere('user2_id', '=', auth()->id())->get()
+            ->map(function ($session) {
+                if ($session->user1_id == auth()->id()) {
+                    return User::find($session->user2_id);
+                } else {
+                    return User::find($session->user1_id);
+                }
+            });
+
+        return UserResource::collection($usersFromSessions);
     }
 }
