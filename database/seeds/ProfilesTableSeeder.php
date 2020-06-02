@@ -34,5 +34,19 @@ class ProfilesTableSeeder extends Seeder
             'created_at'=> Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at'=> Carbon::now()->format('Y-m-d H:i:s'),
         ]);
+
+        // Profile for Mima Tanaskovic user.
+        DB::table('profiles')->insert([
+            'user_id' => '4',
+            'created_at'=> Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at'=> Carbon::now()->format('Y-m-d H:i:s'),
+        ]);
+
+        // Profile for Sanja Tanaskovic user.
+        DB::table('profiles')->insert([
+            'user_id' => '5',
+            'created_at'=> Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at'=> Carbon::now()->format('Y-m-d H:i:s'),
+        ]);
     }
 }
