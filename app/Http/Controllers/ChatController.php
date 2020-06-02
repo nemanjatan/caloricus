@@ -12,6 +12,12 @@ use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
+    public function index()
+    {
+        $activeChats = $this->get_all_chats();
+        return view('chats.index', ['chats' => $activeChats]);
+    }
+
     public function send(Session $session, Request $request)
     {
         $message = $session->messages()->create(['content' => $request->body]);
