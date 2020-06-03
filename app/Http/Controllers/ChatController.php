@@ -110,6 +110,9 @@ class ChatController extends Controller
     {
         return Session::where('user1_id', '=', auth()->id())
             ->orWhere('user2_id', '=', auth()->id())->get()
+            ->reject(function ($session) {
+                return count($session->messages) == 0;
+            })
             ->map(function ($session) {
                 if ($session->user1_id == auth()->id()) {
                     return User::find($session->user2_id);
