@@ -86,7 +86,8 @@
             this.getAllMessages();
 
             Echo.private(`Chat.${this.session.id}`)
-                .listen('PrivateChatEvent', e => {
+                .listen('PrivateChatEvent', (e) => {
+                    console.log('Message received!');
                     this.read();
                     this.chats.push({
                         message: e.content,
