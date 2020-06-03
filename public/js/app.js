@@ -1988,8 +1988,6 @@ __webpack_require__.r(__webpack_exports__);
     this.read();
     this.getAllMessages();
     Echo["private"]("Chat.".concat(this.session.id)).listen('PrivateChatEvent', function (e) {
-      console.log('Message received!');
-
       _this2.read();
 
       _this2.chats.push({
