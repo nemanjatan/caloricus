@@ -6,10 +6,12 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        @foreach($articles as $article)
+                        @forelse ($articles as $article)
                             <a href="/articles/{{ $article->slug }}">{{ $article->title }}</a>
                             <hr/>
-                        @endforeach
+                        @empty
+                            <p>No articles yet!</p>
+                        @endforelse
                     </div>
                 </div>
             </div>
