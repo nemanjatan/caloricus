@@ -22,6 +22,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/articles', 'ArticleController@index')->name('articles.index');
 Route::get('/articles/{article}', 'ArticleController@show')->name('articles.show');
 
 // TODO: Delete this after the demo.
@@ -41,5 +42,5 @@ Route::post('/session/{session}/read', 'ChatController@read');
 Route::get('/session/create/{user}', 'SessionController@create')->name('session.create');
 
 // Profiles
-Route::get('/profiles', 'ProfileController@index')->name('profile.index');
+Route::get('/profiles', 'ProfileController@index')->name('profiles.index');
 Route::get('/profile/{profile}', 'ProfileController@show')->name('profile.show');

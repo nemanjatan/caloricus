@@ -50,7 +50,10 @@
                             @endif
                         @else
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('profile.index') }}">{{ __('Profiles') }}</a>
+                                <a class="nav-link" href="{{ route('articles.index') }}">{{ __('Articles') }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('profiles.index') }}">{{ __('Profiles') }}</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('chats.index') }}">{{ __('Messages') }}</a>

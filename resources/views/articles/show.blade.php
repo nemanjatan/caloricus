@@ -6,11 +6,14 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        {{ $article->title }}
+                        <h1>{{ $article->title }}</h1>
+                        <p>Date published: {{ date("d M Y", strtotime( $article->updated_at )) }}</p>
 
                         @if ( $article->featured_image )
                             <img src="{{ $imagePath }}" width="400">
                         @endif
+
+                        {!! $article->body !!}
                     </div>
                 </div>
             </div>

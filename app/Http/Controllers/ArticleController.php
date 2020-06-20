@@ -3,11 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Article;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $articles = Article::where('is_published', '=', true)->latest()->get();
+        return view('articles.index', ['articles' => $articles]);
+    }
+
     /**
      * Display article if status published is true.
      *
