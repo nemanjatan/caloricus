@@ -44,3 +44,6 @@ Route::get('/session/create/{user}', 'SessionController@create')->name('session.
 // Profiles
 Route::get('/profiles', 'ProfileController@index')->name('profiles.index');
 Route::get('/profile/{profile}', 'ProfileController@show')->name('profile.show');
+
+Route::get('/social/redirect', 'SocialAuthFacebookController@redirect');
+Route::get('/social/callback', 'SocialAuthFacebookController@callback');
